@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using KSP;
 
 
 
@@ -377,7 +376,7 @@ namespace ScienceChecklist
 				wScale(new Rect(10, 27, 480, 13)),
 				_filter.TotalCount == 0 ? 1 : _filter.CompleteCount,
 				_filter.TotalCount == 0 ? 1 : _filter.TotalCount,
-				0,
+				0, _filter.CompleteCount == _filter.TotalCount, false,
 				false,
 				false);
 
@@ -624,7 +623,7 @@ namespace ScienceChecklist
 			GUI.Label(labelRect, exp.Description, labelStyle);
 			GUI.skin.horizontalScrollbar.fixedHeight = compact ? wScale(8) : wScale(13);
 			GUI.skin.horizontalScrollbarThumb.fixedHeight = compact ? wScale(8) : wScale(13);
-			ProgressBar(progressRect, exp.CompletedScience, exp.TotalScience, exp.CompletedScience + exp.OnboardScience, !compact, compact);
+			ProgressBar(progressRect, exp.CompletedScience, exp.TotalScience, exp.CompletedScience + exp.OnboardScience, exp.IsComplete, exp.IsCollected, !compact, compact);
 		}
 
 		/// <summary>
@@ -634,50 +633,39 @@ namespace ScienceChecklist
 		/// <param name="curr">The completed progress value.</param>
 		/// <param name="total">The total progress value.</param>
 		/// <param name="curr2">The shaded progress value (used to show onboard science).</param>
+		/// <param name="complete">The boolean value that determines whether the experiment is complete.</param>
+		/// <param name="collected">The boolean value that determines whether the experiment is collected.</param>
 		/// <param name="showValues">Whether to draw the curr and total values on top of the progress bar.</param>
 		/// <param name="compact">Whether this progress bar should be rendered in compact mode.</param>
-		private void ProgressBar (Rect rect, float curr, float total, float curr2, bool showValues, bool compact)
+		private void ProgressBar (Rect rect, float curr, float total, float curr2, bool complete, bool collected, bool showValues, bool compact)
 		{
 			var completeTexture = compact ? _completeTextureCompact : _completeTexture;
 			var progressTexture = compact ? _progressTextureCompact : _progressTexture;
-			var complete = curr > total || (total - curr < 0.1);
-			if (complete)
-			{
-				curr = total;
-			}
 			var progressRect = new Rect(rect)
 			{
 				y = rect.y + (compact ? wScale(3) : wScale(1)),
 			};
 
-			if (curr2 != 0 && !complete)
-			{
-				var complete2 = false;
-				if (curr2 > total || (total - curr2 < 0.1))
-				{
-					curr2 = total;
-					complete2 = true;
-				}
-				_skin.horizontalScrollbarThumb.normal.background = curr2 < 0.1
-					? _emptyTexture
-					: complete2
-						? completeTexture
-						: progressTexture;
+			// Assures that progress bar does not overflows.
+			curr = Math.Min(curr, total);
+			curr2 = Math.Min(curr2, total);
 
+			// Draw collected science only when visible.
+			if (curr2 > curr)
+			{
+				_skin.horizontalScrollbarThumb.normal.background = curr2 < 0.1 ? _emptyTexture : collected ? completeTexture : progressTexture;
 				GUI.HorizontalScrollbar(progressRect, 0, curr2 / total, 0, 1, _horizontalScrollbarOnboardStyle);
 			}
 
-			_skin.horizontalScrollbarThumb.normal.background = curr < 0.1
-				? _emptyTexture
-				: complete ? completeTexture : progressTexture;
-
+			complete |= total - curr < 0.1;
+			_skin.horizontalScrollbarThumb.normal.background = curr < 0.1 ? _emptyTexture : complete ? completeTexture : progressTexture;
 			GUI.HorizontalScrollbar(progressRect, 0, curr / total, 0, 1);
 
 			if (showValues)
 			{
-			var labelRect = new Rect(rect)
-			{
-				y = rect.y - wScale(1),
+				var labelRect = new Rect(rect)
+				{
+					y = rect.y - wScale(1),
 				};
 				GUI.Label(labelRect, string.Format("{0:0.#}  /  {1:0.#}", curr, total), _progressLabelStyle);
 			}
