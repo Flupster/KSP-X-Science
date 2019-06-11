@@ -1,4 +1,7 @@
-﻿
+﻿using System.Collections.Generic;
+
+
+
 namespace ScienceChecklist {
 	/// <summary>
 	/// An object that represents a ScienceExperiement in a given Situation.
@@ -115,25 +118,30 @@ namespace ScienceChecklist {
 			TotalScience = ScienceSubject.scienceCap * HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier;
 			IsComplete = CompletedScience > TotalScience || TotalScience - CompletedScience < 0.1;
 
-			var multiplier = ScienceExperiment.baseValue / ScienceExperiment.scienceCap;
-
-
-
 			OnboardScience = 0;
-			if( Sci.OnboardScienceList.ContainsKey( ScienceSubject.id ) )
-			{
-				var data = Sci.OnboardScienceList[ ScienceSubject.id ];
-//				var _logger = new Logger( "Experiment" );
-//				_logger.Trace( ScienceSubject.id + " found " + data.Count( ) + " items" );
-
+			List<ScienceData> data;
+			if( Sci.OnboardScienceList.TryGetValue( ScienceSubject.id, out data ) )
 				for( int x = 0; x < data.Count; x++ )
-				{
-					var next = (TotalScience - (CompletedScience + OnboardScience)) * multiplier;
-					OnboardScience += next;
-				}
-			}
+					OnboardScience += NextScienceGain(ScienceExperiment, CompletedScience + OnboardScience, TotalScience);
+
 			var AllCollectedScience = CompletedScience + OnboardScience;
 			IsCollected = AllCollectedScience > TotalScience || TotalScience - AllCollectedScience < 0.1;
+		}
+		#endregion
+
+		#region METHODS (private)
+		/// <summary>
+		/// Calculates science yield of next measurement.
+		/// </summary>
+		/// <param name="Experiment">The science experiment.</param>
+		/// <param name="CollectedScience">The science collected so far.</param>
+		/// <param name="TotalScience">The science cap.</param>
+		static float NextScienceGain(ScienceExperiment Experiment, float CollectedScience, float TotalScience)
+		{
+			var RemainingScience = TotalScience - CollectedScience;
+			var ScientificValue = Experiment.applyScienceScale ? 1 - (CollectedScience / TotalScience) : 1;
+			var Multiplier = Experiment.baseValue / Experiment.scienceCap;
+			return RemainingScience * ScientificValue * Multiplier;
 		}
 		#endregion
 	}
