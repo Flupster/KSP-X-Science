@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-
+using KSP.Localization;
 
 
 
@@ -87,17 +87,17 @@ namespace ScienceChecklist {
 		{
 			switch (situation) {
 				case ExperimentSituations.FlyingHigh:
-					return "flying high over";
+					return Localizer.Format("#xScience_Situation1");//"flying high over"
 				case ExperimentSituations.FlyingLow:
-					return "flying low over";
+					return Localizer.Format("#xScience_Situation2");//"flying low over"
 				case ExperimentSituations.InSpaceHigh:
-					return "in space high over";
+					return Localizer.Format("#xScience_Situation3");//"in space high over"
 				case ExperimentSituations.InSpaceLow:
-					return "in space near";
+					return Localizer.Format("#xScience_Situation4");//"in space near"
 				case ExperimentSituations.SrfLanded:
-					return "landed at";
+					return Localizer.Format("#xScience_Situation5");//"landed at"
 				case ExperimentSituations.SrfSplashed:
-					return "splashed down at";
+					return Localizer.Format("#xScience_Situation6");//"splashed down at"
 				default:
 					return situation.ToString();
 			}

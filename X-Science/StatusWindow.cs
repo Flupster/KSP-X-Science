@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KSP.Localization;
 
 
 
@@ -41,7 +42,7 @@ namespace ScienceChecklist
 		public event EventHandler OnOpenEvent;
 
 		public StatusWindow( ScienceChecklistAddon Parent )
-			: base( "[x] Science! Here and Now", 250, 30 )
+			: base( Localizer.Format("#xScienceHereandNow_title"), 250, 30 )//"[x] Science! Here and Now"
 		{
 			_parent = Parent;
 			UiScale = _parent.Config.UiScale;
@@ -177,9 +178,9 @@ namespace ScienceChecklist
 			GUILayout.BeginHorizontal( );
 			GUIContent Content = null;
 			if( _parent.Config.StopTimeWarp )
-				Content = new GUIContent( _GfxTimeWarp, "Time warp will be stopped" );
+				Content = new GUIContent( _GfxTimeWarp, Localizer.Format("#xScienceHereandNow_TimeWarp") );//"Time warp will be stopped"
 			else
-				Content = new GUIContent( _GfxTimeWarpOff, "Time warp will not be stopped" );
+				Content = new GUIContent( _GfxTimeWarpOff, Localizer.Format("#xScienceHereandNow_TimeWarpOff") );//"Time warp will not be stopped"
 			if( GUILayout.Button( Content, GUILayout.Width( wScale( 36 ) ), GUILayout.Height( wScale( 32 ) ) ) )
 			{
 				_parent.Config.StopTimeWarp = !_parent.Config.StopTimeWarp;
@@ -189,9 +190,9 @@ namespace ScienceChecklist
 
 
 			if( _parent.Config.PlayNoise )
-				Content = new GUIContent( _GfxAudioAlert, "Audio alert will sound" );
+				Content = new GUIContent( _GfxAudioAlert, Localizer.Format("#xScienceHereandNow_AudioAlert") );//"Audio alert will sound"
 			else
-				Content = new GUIContent( _GfxAudioAlertOff, "No audio alert" );
+				Content = new GUIContent( _GfxAudioAlertOff, Localizer.Format("#xScienceHereandNow_AudioAlertOff") );//"No audio alert"
 			if( GUILayout.Button( Content, GUILayout.Width( wScale( 36 ) ), GUILayout.Height( wScale( 32 ) ) ) )
 			{
 				_parent.Config.PlayNoise = !_parent.Config.PlayNoise;
@@ -201,9 +202,9 @@ namespace ScienceChecklist
 			
 			
 			if( _parent.Config.ShowResultsWindow )
-				Content = new GUIContent( _GfxResultsWindow, "Show results window" );
+				Content = new GUIContent( _GfxResultsWindow, Localizer.Format("#xScienceHereandNow_ResultsWindow") );//"Show results window"
 			else
-				Content = new GUIContent( _GfxResultsWindowOff, "Supress results window" );
+				Content = new GUIContent( _GfxResultsWindowOff, Localizer.Format("#xScienceHereandNow_ResultsWindowOff") );//"Supress results window"
 			if( GUILayout.Button( Content, GUILayout.Width( wScale( 36 ) ), GUILayout.Height( wScale( 32 ) ) ) )
 			{
 				_parent.Config.ShowResultsWindow = !_parent.Config.ShowResultsWindow;
@@ -244,35 +245,35 @@ namespace ScienceChecklist
 			if( _filter.CurrentSituation != null )
 			{
 				Body Body = _filter.CurrentSituation.Body;
-				Text += "Body: " + GameHelper.LocalizeBodyName( Body.CelestialBody.displayName ) + "\n";
+                Text += Localizer.Format("#xScienceHereandNow_Body", GameHelper.LocalizeBodyName(Body.CelestialBody.displayName)) + "\n";//"Body: " + 
 				Text += Body.Type;
 				if( Body.IsHome )
-					Text += " - Home!";
+					Text += Localizer.Format("#xScienceHereandNow_BodyIsHome");//" - Home!"
 				Text += "\n\n";
-				Text += "Space high: " + (Body.CelestialBody.scienceValues.spaceAltitudeThreshold/1000) + "km\n";
+				Text += Localizer.Format("#xScienceHereandNow_spaceAltitude", Body.CelestialBody.scienceValues.spaceAltitudeThreshold/1000) ;//"Space high: " + ()+ "km\n"
 
 				if( Body.HasAtmosphere )
 				{
-					Text += "Atmos depth: " + (Body.CelestialBody.atmosphereDepth/1000) + "km\n";
-					Text += "Flying high: " + (Body.CelestialBody.scienceValues.flyingAltitudeThreshold/1000) + "km\n";
+                    Text += Localizer.Format("#xScienceHereandNow_HasAtmosphere", Body.CelestialBody.atmosphereDepth/1000);// "Atmos depth: " + () + "km\n"
+					Text += Localizer.Format("#xScienceHereandNow_flyingAltitude", Body.CelestialBody.scienceValues.flyingAltitudeThreshold/1000);//"Flying high: " + () + "km\n"
 					if( Body.HasOxygen )
-						Text += "Has oxygen - jets work\n";
+						Text += Localizer.Format("#xScienceHereandNow_HasOxygen");//"Has oxygen - jets work\n"
 				}
 				else
-					Text += "No kind of atmosphere\n";
+					Text += Localizer.Format("#xScienceHereandNow_HasNoAtmosphere");//"No kind of atmosphere\n"
 
 				if( Body.HasSurface )
 				{
 					if( Body.HasOcean )
-						Text += "Has oceans\n";
+						Text += Localizer.Format("#xScienceHereandNow_HasOcean");//"Has oceans\n"
 				}
 				else
-					Text += "No surface\n";
+					Text += Localizer.Format("#xScienceHereandNow_NOSurface");//"No surface\n"
 
 				Text += "\n";
 			}
 
-			Text += "Current vessel: " + _parent.Science.CurrentVesselScience.Count( ) + " stored experiments";
+			Text += Localizer.Format("#xScienceHereandNow_CurrentSituation", _parent.Science.CurrentVesselScience.Count( ));//"Current vessel: " +  + " stored experiments"
 
 			return Text;
 		}

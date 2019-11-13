@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using System.Reflection;
 using KSP.UI.Screens;
+using KSP.Localization;
 
 
 
@@ -23,7 +24,7 @@ namespace ScienceChecklist
 
 
 		public ShipStateWindow( ScienceChecklistAddon Parent )
-			: base( "[x] Science! Selected Object", 250, 30 )
+			: base( Localizer.Format("#xScienceShipState_title"), 250, 30 )//"[x] Science! Selected Object"
 		{
 			_parent = Parent;
 			UiScale = _parent.Config.UiScale;
@@ -93,31 +94,31 @@ namespace ScienceChecklist
 			if( SelectedObject.celestialBody )
 			{
 				Body Body = _parent.Science.BodyList[ SelectedObject.celestialBody ];
-				Title += "Body: " + GameHelper.LocalizeBodyName( Body.CelestialBody.displayName ) + "\n";
+                Title += Localizer.Format("#xScienceShipState_body", GameHelper.LocalizeBodyName(Body.CelestialBody.displayName)) + "\n";//"Body: " + 
 				Title += Body.Type;
-				if( Body.IsHome )
-					Title += " - Home!";
+                if (Body.IsHome)
+                    Title += Localizer.Format("#xScienceShipState_BodyIsHome");//" - Home!"
 
 
 
-				Text += "Space high: " + (Body.CelestialBody.scienceValues.spaceAltitudeThreshold/1000) + "km";
+				Text += Localizer.Format("#xScienceShipState_spaceAltitude", Body.CelestialBody.scienceValues.spaceAltitudeThreshold/1000);//"Space high: " +  + "km"
 				if( Body.HasAtmosphere )
 				{
-					Text += "\nAtmos depth: " + (Body.CelestialBody.atmosphereDepth/1000) + "km";
-					Text += "\nFlying high: " + (Body.CelestialBody.scienceValues.flyingAltitudeThreshold/1000) + "km";
+					Text += Localizer.Format("#xScienceShipState_atmosphereDepth", Body.CelestialBody.atmosphereDepth/1000);//"\nAtmos depth: " +  + "km"
+					Text += Localizer.Format("#xScienceShipState_flyingAltitude", Body.CelestialBody.scienceValues.flyingAltitudeThreshold/1000);//"\nFlying high: " + () + "km"
 					if( Body.HasOxygen )
-						Text += "\nHas oxygen - jets work";
+						Text += Localizer.Format("#xScienceShipState_HasOxygen");//"\nHas oxygen - jets work"
 				}
 				else
-					Text += "\nNo kind of atmosphere";
+					Text += Localizer.Format("#xScienceShipState_HasNoAtmosphere");//"\nNo kind of atmosphere"
 
 				if( Body.HasSurface )
 				{
 					if( Body.HasOcean )
-						Text += "\nHas oceans";
+						Text += Localizer.Format("#xScienceShipState_HasOcean");//"\nHas oceans"
 				}
 				else
-					Text += "\nNo surface";
+					Text += Localizer.Format("#xScienceShipState_NOSurface");//"\nNo surface"
 			}
 
 			scrollPosition = GUILayout.BeginScrollView( scrollPosition );
@@ -142,7 +143,7 @@ namespace ScienceChecklist
 			if( SelectedObject.vessel != null && SelectedObject.vessel.protoVessel != null )
 			{
 				if( SelectedObject.vessel.DiscoveryInfo.Level != DiscoveryLevels.Owned )
-					Title = "Unowned object";
+					Title = Localizer.Format("#xScienceShipState_Unownedobject");//"Unowned object"
 				else
 				{
 					Title = SelectedObject.vessel.GetName( );
@@ -176,7 +177,7 @@ namespace ScienceChecklist
 						var crew = proto.GetVesselCrew().Count();
 						mass += res.Values.Sum(d => d.GetMass());
 						var parts = proto.protoPartSnapshots.Count();
-						texts.Add(string.Format( "Crew: {0}, Parts: {1}, Mass: {2:f2}t", crew, parts, mass ) );
+                        texts.Add(Localizer.Format("#xScienceShipState_Vessel", crew, parts, mass));//string.Format( "Crew: {0}, Parts: {1}, Mass: {2:f2}t", , ,  )
 
 
 
@@ -185,10 +186,10 @@ namespace ScienceChecklist
 							case Statuses.pod:
 								break;
 							case Statuses.none:
-								texts.Add( "No command pod" );
+								texts.Add( Localizer.Format("#xScienceShipState_Vesselnopod") );//"No command pod"
 								break;
 							case Statuses.seat:
-								texts.Add( "Has command seat" );
+								texts.Add( Localizer.Format("#xScienceShipState_Vesselpod") );//"Has command seat"
 								break;
 						}
 					}
