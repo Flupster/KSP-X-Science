@@ -1,4 +1,4 @@
-﻿
+﻿using KSP.Localization;
 namespace ScienceChecklist {
 	/// <summary>
 	/// An object that represents a ScienceExperiement in a given Situation.
@@ -81,10 +81,7 @@ namespace ScienceChecklist {
 		/// </summary>
 		public string Description {
 			get {
-				return string.Format(
-					"{0} while {1}",
-					ScienceExperiment.experimentTitle,
-					Situation.Description);
+                return Localizer.Format("#xScience_Situation", ScienceExperiment.experimentTitle,Situation.Description);//string.Format("{0} while {1}", , )
 			}
 		}
 

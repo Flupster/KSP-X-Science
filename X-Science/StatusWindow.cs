@@ -443,7 +443,7 @@ namespace ScienceChecklist
 						if( _parent.Config.PlayNoise )
 							PlayNoise( );
 						if( _parent.Config.StopTimeWarp || _parent.Config.PlayNoise )
-							ScreenMessages.PostScreenMessage( "New Situation: " + _filter.CurrentSituation.Description );
+							ScreenMessages.PostScreenMessage( Localizer.Format("#xScience_NewSituation_msg", _filter.CurrentSituation.Description) );//"New Situation: " + 
 					}
 				}
 			}
