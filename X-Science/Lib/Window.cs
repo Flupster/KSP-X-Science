@@ -28,6 +28,7 @@ using System;
 using UnityEngine;
 using KSP.IO;
 using KSP.UI.Dialogs;
+using KSP.Localization;
 
 
 
@@ -82,10 +83,10 @@ namespace ScienceChecklist
 			visible = false;
 
 			var texture = TextureHelper.FromResource( "ScienceChecklist.icons.resize.png", 16, 16 );
-			resizeContent = (texture != null) ? new GUIContent(texture, "Drag to resize the window") : new GUIContent("R", "Drag to resize the window");
+			resizeContent = (texture != null) ? new GUIContent(texture, Localizer.Format("#xScience_Resize")) : new GUIContent("R", Localizer.Format("#xScience_Resize"));//"Drag to resize the window""Drag to resize the window"
 
 			var closetexture = TextureHelper.FromResource( "ScienceChecklist.icons.close.png", 16, 16 );
-			closeContent = ( closetexture != null ) ? new GUIContent( closetexture, "Close window" ) : new GUIContent( "X", "Close window" );
+			closeContent = ( closetexture != null ) ? new GUIContent( closetexture, Localizer.Format("#xScienceWindow_CloseWindow") ) : new GUIContent( "X", Localizer.Format("#xScienceWindow_CloseWindow") );//"Close window"
 		}
 
 		public bool IsVisible()
